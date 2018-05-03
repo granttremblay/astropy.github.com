@@ -244,7 +244,7 @@ function pypi_translator(pypiname) {
         return 'None';
     } else {
         var urltext = 'http://pypi.python.org/pypi/' + pypiname;
-        return '<a href="' + urltext + '">' + pypiname + '</a>';
+        return '<a href="' + urltext + '">' + 'PyPI' + '</a>';
     }
 }
 
@@ -326,19 +326,16 @@ function populateTable(tableid, data, allowprovisional) {
 
             if (checkProvisional(pkgi.provisional)) {
                 nmcell = row.insertCell(0);
-				urlcell = row.insertCell(1)
-                stablecell = row.insertCell(1);
-                pypicell = row.insertCell(2);
-                urlcell = row.insertCell(3);
-                repocell = row.insertCell(4);
-                maintcell = row.insertCell(5);
+				urlcell = row.insertCell(1);
+				repocell = row.insertCell(2);
+                pypicell = row.insertCell(3);
+
 
                 nmcell.innerHTML = pkgi.name;
-                stablecell.innerHTML = bool_translator(pkgi.stable);
-                pypicell.innerHTML = pypi_translator(pkgi.pypi_name);
-                urlcell.innerHTML = url_translator(pkgi.home_url);
-                repocell.innerHTML = repo_translator(pkgi.repo_url);
-                maintcell.innerHTML = maintainer_translator(pkgi.maintainer, pkgi.name);
+				urlcell.innerHTML = url_translator(pkgi.home_url);
+				repocell.innerHTML = repo_translator(pkgi.repo_url);
+				pypicell.innerHTML = pypi_translator(pkgi.pypi_name);
+				
             }
         }
     }
