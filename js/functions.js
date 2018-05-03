@@ -225,9 +225,19 @@ function url_translator(urltext) {
     if (urltext === undefined) {
         return 'None';
     } else {
-        return '<a href="' + urltext + '">' + urltext + '</a>';
+        return '<a href="' + urltext + '">' + 'Website' + '</a>';
     }
 }
+
+
+function repo_translator(urltext) {
+    if (urltext === undefined) {
+        return 'None';
+    } else {
+        return '<a href="' + urltext + '">' + 'Repository' + '</a>';
+    }
+}
+
 
 function pypi_translator(pypiname) {
     if (pypiname === undefined) {
@@ -264,10 +274,12 @@ function maintainer_translator(maint, pkgnm) {
     }
 }
 
+
 function populateTables(data, tstat, xhr) {
     populateTable('accepted-package-table', data, false);
     populateTable('provisional-package-table', data, 'only')
 }
+
 
 function populateTable(tableid, data, allowprovisional) {
     // First we use allowprovisional io decide what the checkProvisional function (used below) does
@@ -314,6 +326,7 @@ function populateTable(tableid, data, allowprovisional) {
 
             if (checkProvisional(pkgi.provisional)) {
                 nmcell = row.insertCell(0);
+				urlcell = row.insertCell(1)
                 stablecell = row.insertCell(1);
                 pypicell = row.insertCell(2);
                 urlcell = row.insertCell(3);
@@ -324,12 +337,82 @@ function populateTable(tableid, data, allowprovisional) {
                 stablecell.innerHTML = bool_translator(pkgi.stable);
                 pypicell.innerHTML = pypi_translator(pkgi.pypi_name);
                 urlcell.innerHTML = url_translator(pkgi.home_url);
-                repocell.innerHTML = url_translator(pkgi.repo_url);
+                repocell.innerHTML = repo_translator(pkgi.repo_url);
                 maintcell.innerHTML = maintainer_translator(pkgi.maintainer, pkgi.name);
             }
         }
     }
 }
+
+
+//
+//function populateTables(data, tstat, xhr) {
+//    populateTable('accepted-package-table', data, false);
+//    populateTable('provisional-package-table', data, 'only')
+//}
+//
+//
+//function populateTable(tableid, data, allowprovisional) {
+//    // First we use allowprovisional io decide what the checkProvisional function (used below) does
+//    var checkProvisional;
+//    if (allowprovisional === false) {
+//        checkProvisional = function(provisional_status) { return provisional_status === false; }
+//    } else if (allowprovisional == 'only') {
+//        checkProvisional = function(provisional_status) { return provisional_status; }
+//    } else if (allowprovisional === true) {
+//        checkProvisional = function(provisional_status) { return true; }
+//    } else {
+//        throw "Invalid allowprovisional value " + allowprovisional;
+//    }
+//
+//    // Now we get the table and prepare it
+//    var tab = document.getElementById(tableid);
+//    var ncols = tab.rows[0].cells.length;
+//
+//    //we have to delete the "Loading..." row
+//    tab.deleteRow(1);
+//
+//    var pkgi, row, nmcell, stablecell, pypicell, urlcell, rpocell, maintcell;
+//    if (data === null) {
+//        row = tab.insertRow(1);
+//        row.insertCell(0).innerHTML = 'Could not load registry file!';
+//        for (i=0;i<(ncols - 1);i++) { row.insertCell(i + 1).innerHTML = ' '; }
+//    } else {
+//        var pkgs = data.packages;
+//
+//        //First figure out the correct order if we sort on the name
+//        var nmarr = new Array(pkgs.length);
+//        var sortorder = new Array(pkgs.length);
+//        for (i=0; i<pkgs.length; i++) {
+//            pkgi = pkgs[i];
+//            nmarr[i] = pkgi.name.toLowerCase();
+//            sortorder[i] = i;
+//        }
+//        // This "sorts" the indecies using a compare function that actually sorts nmarr
+//        sortorder.sort(function (a, b) { return nmarr[a] < nmarr[b] ? -1 : nmarr[a] > nmarr[b] ? 1 : 0; });
+//
+//        for (i=0; i<sortorder.length; i++) {
+//            pkgi = pkgs[sortorder[i]];
+//            row = tab.insertRow(i + 1);
+//
+//            if (checkProvisional(pkgi.provisional)) {
+//                nmcell = row.insertCell(0);
+//                stablecell = row.insertCell(1);
+//                pypicell = row.insertCell(2);
+//                urlcell = row.insertCell(3);
+//                repocell = row.insertCell(4);
+//                maintcell = row.insertCell(5);
+//
+//                nmcell.innerHTML = pkgi.name;
+//                stablecell.innerHTML = bool_translator(pkgi.stable);
+//                pypicell.innerHTML = pypi_translator(pkgi.pypi_name);
+//                urlcell.innerHTML = url_translator(pkgi.home_url);
+//                repocell.innerHTML = url_translator(pkgi.repo_url);
+//                maintcell.innerHTML = maintainer_translator(pkgi.maintainer, pkgi.name);
+//            }
+//        }
+//    }
+//}
 
 function guess_os() {
     var OSName="source";
