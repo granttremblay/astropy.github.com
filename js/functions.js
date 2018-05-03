@@ -260,6 +260,7 @@ var _email_regex_str = '[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}';
 var _email_regex  = new RegExp(_email_regex_str, 'i');
 var _email_with_name_regex  = new RegExp('(.+)<(' + _email_regex_str + ')>', 'i');
 
+
 function maintainer_translator(maint, pkgnm) {
     var url, match;
     if (_email_with_name_regex.test(maint)) {
@@ -301,7 +302,7 @@ function populateTable(tableid, data, allowprovisional) {
     //we have to delete the "Loading..." row
     tab.deleteRow(1);
 
-    var pkgi, row, nmcell, stablecell, pypicell, urlcell, rpocell, maintcell;
+    var pkgi, row, nmcell, stablecell, pypicell, urlcell, repocell;
     if (data === null) {
         row = tab.insertRow(1);
         row.insertCell(0).innerHTML = 'Could not load registry file!';
@@ -317,24 +318,30 @@ function populateTable(tableid, data, allowprovisional) {
             nmarr[i] = pkgi.name.toLowerCase();
             sortorder[i] = i;
         }
-        // This "sorts" the indecies using a compare function that actually sorts nmarr
+        // This "sorts" the indicies using a compare function that actually sorts nmarr
         sortorder.sort(function (a, b) { return nmarr[a] < nmarr[b] ? -1 : nmarr[a] > nmarr[b] ? 1 : 0; });
 
         for (i=0; i<sortorder.length; i++) {
             pkgi = pkgs[sortorder[i]];
-            row = tab.insertRow(i + 1);
+			row = tab.insertRow(i + 1);
+//			maintrow = tab.insertRow(i + 1);
 
             if (checkProvisional(pkgi.provisional)) {
                 nmcell = row.insertCell(0);
 				urlcell = row.insertCell(1);
 				repocell = row.insertCell(2);
                 pypicell = row.insertCell(3);
+//				var maintcell_blank = maintrow.insertCell(0);
+//				var maintcell = maintrow.insertCell(1);
 
 
                 nmcell.innerHTML = pkgi.name;
 				urlcell.innerHTML = url_translator(pkgi.home_url);
 				repocell.innerHTML = repo_translator(pkgi.repo_url);
 				pypicell.innerHTML = pypi_translator(pkgi.pypi_name);
+//				maintcell_blank.innerHTML = "";
+//				maintcell.innerHTML = maintainer_translator(pkgi.maintainer, pkgi.name);
+
 				
             }
         }

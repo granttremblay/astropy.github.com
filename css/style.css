@@ -550,9 +550,11 @@ table{
 	word-break:break-all;
 }
 
+/*
 tr{
 	border-bottom: 1px #efefef solid;
 }
+*/
 
 
 thead{
@@ -562,14 +564,20 @@ thead{
 }
 
 
+/*========================*/
+/*Modified by Grant Tremblay to make first column Bold and table larger*/
+
 td{
 	padding:16px 4px;
 	font-size: 140%;
 }
 
+
 td:first-child {
     font-weight: bold;
   }
+
+/*========================*/
 
 /* About */
 
