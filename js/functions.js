@@ -282,7 +282,6 @@ function populateTables(data, tstat, xhr) {
 
 
 function populateTable(tableid, data) {
-
     // Now we get the table and prepare it
     var tab = document.getElementById(tableid);
     var ncols = tab.rows[0].cells.length;
@@ -290,10 +289,8 @@ function populateTable(tableid, data) {
     //we have to delete the "Loading..." row
     tab.deleteRow(1);
 
-    var pkgi, namerow, descrow, shieldrow, maintrow, nmcell, stablecell, pypicell, urlcell, repocell;
-
     if (data === null) {
-        row = tab.insertRow(1);
+        var row = tab.insertRow(1);
         row.insertCell(0).innerHTML = 'Could not load registry file!';
         for (i=0;i<(ncols - 1);i++) { row.insertCell(i + 1).innerHTML = ' '; }
     } else {
@@ -310,29 +307,44 @@ function populateTable(tableid, data) {
         // This "sorts" the indicies using a compare function that actually sorts nmarr
         sortorder.sort(function (a, b) { return nmarr[a] < nmarr[b] ? -1 : nmarr[a] > nmarr[b] ? 1 : 0; });
 
+        var pkgi;
+        var namerow, descrow, shieldrow, maintrow;
+        var nmcell, pypicell, urlcell, repocell;
+        var desccell, maintcell, shieldcell;
+
         for (i=0; i<sortorder.length; i++) {
             pkgi = pkgs[sortorder[i]];
             namerow = tab.insertRow(i*4 + 1);
-            descrow = tab.insertRow(i*4 + 2);
-            maintrow = tab.insertRow(i*4 + 3);
-            shieldrow = tab.insertRow(i*4 + 4);
 
             nmcell = namerow.insertCell(0);
             urlcell = namerow.insertCell(1);
             repocell = namerow.insertCell(2);
             pypicell = namerow.insertCell(3);
 
-
             nmcell.innerHTML = pkgi.name;
             urlcell.innerHTML = url_translator(pkgi.home_url);
             repocell.innerHTML = repo_translator(pkgi.repo_url);
             pypicell.innerHTML = pypi_translator(pkgi.pypi_name);
 
-            descrow.innerHTML = pkgi.description
 
-            shieldrow.innerHTML = makeShields(pkgi)
+            descrow = tab.insertRow(i*4 + 2);
+            descrow.insertCell(0).innerHTML = "";
+            desccell = descrow.insertCell(1);
+            desccell.colSpan = "3";
+            desccell.innerHTML = pkgi.description;
 
-            maintrow.innerHTML = "Maintainer(s): " + maintainer_translator(pkgi.maintainer, pkgi.name);
+            maintrow = tab.insertRow(i*4 + 3);
+            maintrow.insertCell(0).innerHTML = "";
+            maintcell = maintrow.insertCell(1);
+            maintcell.colSpan = "3";
+            maintcell.innerHTML = "Maintainer(s): " + maintainer_translator(pkgi.maintainer, pkgi.name);
+
+            shieldrow = tab.insertRow(i*4 + 4);
+            shieldrow.insertCell(0).innerHTML = "";
+            shieldcell = shieldrow.insertCell(1);
+            shieldcell.colSpan = "3";
+            shieldcell.innerHTML = makeShields(pkgi)
+
         }
     }
 }
@@ -370,7 +382,7 @@ function makeShields(pkg) {
       }
 
       url = "https://img.shields.io/badge/" + shield_name + "-" + pkgvalue + "-" + color + ".svg";
-      shield_string += "<img src=\"" + url + "\">"
+      shield_string += "<img src=\"" + url + "\">" + " "
     }
   }
   return shield_string
