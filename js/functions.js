@@ -359,9 +359,9 @@ var review_name_map = {"functionality": "Functionality",
 
 var review_default_color = "green";
 var review_color_map = {'Unmaintained': "red",
-    "Functional but low activity": "yellow",
+    "Functional but low activity": "orange",
     "Good": "green",
-    "Partial": "yellow",
+    "Partial": "orange",
     "Needs work": "red"
 };
 
