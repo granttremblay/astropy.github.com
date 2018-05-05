@@ -278,7 +278,6 @@ function maintainer_translator(maint, pkgnm) {
 
 function populateTables(data, tstat, xhr) {
     populateTable('accepted-package-table', data, false);
-    populateTable('provisional-package-table', data, 'only')
 }
 
 
@@ -302,7 +301,8 @@ function populateTable(tableid, data, allowprovisional) {
     //we have to delete the "Loading..." row
     tab.deleteRow(1);
 
-    var pkgi, row, nmcell, stablecell, pypicell, urlcell, repocell;
+    var pkgi, namerow, descrow, shieldrow, maintrow, nmcell, stablecell, pypicell, urlcell, repocell;
+
     if (data === null) {
         row = tab.insertRow(1);
         row.insertCell(0).innerHTML = 'Could not load registry file!';
@@ -323,29 +323,72 @@ function populateTable(tableid, data, allowprovisional) {
 
         for (i=0; i<sortorder.length; i++) {
             pkgi = pkgs[sortorder[i]];
-			row = tab.insertRow(i + 1);
-//			maintrow = tab.insertRow(i + 1);
+            namerow = tab.insertRow(i*4 + 1);
+            descrow = tab.insertRow(i*4 + 2);
+            maintrow = tab.insertRow(i*4 + 3);
+            shieldrow = tab.insertRow(i*4 + 4);
 
             if (checkProvisional(pkgi.provisional)) {
-                nmcell = row.insertCell(0);
-				urlcell = row.insertCell(1);
-				repocell = row.insertCell(2);
-                pypicell = row.insertCell(3);
-//				var maintcell_blank = maintrow.insertCell(0);
-//				var maintcell = maintrow.insertCell(1);
+                nmcell = namerow.insertCell(0);
+                urlcell = namerow.insertCell(1);
+                repocell = namerow.insertCell(2);
+                pypicell = namerow.insertCell(3);
 
 
                 nmcell.innerHTML = pkgi.name;
-				urlcell.innerHTML = url_translator(pkgi.home_url);
-				repocell.innerHTML = repo_translator(pkgi.repo_url);
-				pypicell.innerHTML = pypi_translator(pkgi.pypi_name);
-//				maintcell_blank.innerHTML = "";
-//				maintcell.innerHTML = maintainer_translator(pkgi.maintainer, pkgi.name);
+                urlcell.innerHTML = url_translator(pkgi.home_url);
+                repocell.innerHTML = repo_translator(pkgi.repo_url);
+                pypicell.innerHTML = pypi_translator(pkgi.pypi_name);
 
-				
+                descrow.innerHTML = pkgi.description
+
+                shieldrow.innerHTML = makeShields(pkgi)
+
+                maintrow.innerHTML = "Maintainer(s): " + maintainer_translator(pkgi.maintainer, pkgi.name);
+
+
             }
         }
     }
+}
+
+var review_name_map = {"functionality": "Functionality",
+    "ecointegration": "Astropy%20integration",
+    "documentation": "Docs",
+    "testing": "Tests",
+    "devstatus": "Development",
+    "python3": "Python 3"
+};
+
+var review_default_color = "green";
+var review_color_map = {'Unmaintained': "red",
+    "Functional but low activity": "yellow",
+    "Good": "green",
+    "Partial": "yellow",
+    "Needs work": "red"
+};
+
+function makeShields(pkg) {
+  var shield_string = "";
+
+  var key, shield_name, pkgvalue, color, url;
+
+  for (key in review_name_map) {
+    console.log("K"+key);
+    if (review_name_map.hasOwnProperty(key)) {
+      shield_name = review_name_map[key];
+      pkgvalue = pkg.review[key];
+
+      color = review_color_map[pkgvalue];
+      if (typeof color == 'undefined') {
+        color = review_default_color;
+      }
+
+      url = "https://img.shields.io/badge/" + shield_name + "-" + pkgvalue + "-" + color + ".svg";
+      shield_string += "<img src=\"" + url + "\">"
+    }
+  }
+  return shield_string
 }
 
 
