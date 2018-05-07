@@ -65,8 +65,8 @@ Institute under Contract NAS5-26555, or for ESA by the Hubble European
 Space Agency Information Centre. Copyright statement at
 hubblesite.org. */
 #index {
-        background-image: url("../images/background.jpg");
-        background-repeat: repeat-x;
+        background-image: url("../images/background_proposed.jpg");
+        background-repeat: no-repeat;
         background-position: center top;
 }
 
